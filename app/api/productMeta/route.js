@@ -1,19 +1,22 @@
     import { PrismaClient } from "@prisma/client";
     import { NextResponse } from "next/server";
+
+
     
-
-
     const prisma = new PrismaClient();
 
 
     export const GET = async () => {
     try {
-        const posts = await prisma.post.findMany();
+        const comment = await prisma.postComment.findMany();
 
-        return NextResponse.json({ data: posts }, { status: 200 });
+        return NextResponse.json({ data: comment }, { status: 401 });
     } catch (err) {
         return NextResponse.json(
-        { status: "ERROR !", data: err.message },
+        {
+            status: "ERROR ",
+            data: err.message,
+        },
         { status: 401 }
         );
     }
@@ -22,11 +25,11 @@
     export const POST = async (req) => {
     try {
         const body = await req.json();
-        const postData = await prisma.post.create({
+        const comment = await prisma.postComment.create({
         data: body,
         });
 
-        return NextResponse.json({ data: postData }, { status: 200 });
+        return NextResponse.json({ data: comment }, { status: 202 });
     } catch (err) {
         return NextResponse.json(
         { status: "ERROR ", data: err.message },
@@ -39,17 +42,17 @@
     try {
         const body = await req.json();
         const { id } = body || {};
-        const updatedData = await prisma.post.update({
+        const updateComment = await prisma.postComment.update({
         where: { id: Number(id) },
         data: body,
         });
 
-        return NextResponse.json({ data: updatedData }, { status: 200 });
+        return NextResponse.json({ data: updateComment });
     } catch (err) {
-        return NextResponse.json(
-        { status: "ERROR!", data: err.message },
-        { status: 401 }
-        );
+        return NextResponse.json({
+        status: "ERROR ",
+        data: err.message,
+        });
     }
     };
 
@@ -57,17 +60,20 @@
     try {
         const body = await req.json();
         const { id } = body;
-        const deletedData = await prisma.post.delete({
+        const deletedData = await prisma.postComment.delete({
         where: { id: Number(id) },
         });
 
         return NextResponse.json(
         { status: 204, data: deletedData },
-        { status: 204 }
+        { status: 200 }
         );
     } catch (err) {
         return NextResponse.json(
-        { status: "ERROR", data: err.message },
+        {
+            status: "ERROR ",
+            data: err.message,
+        },
         { status: 401 }
         );
     }
